@@ -14,7 +14,7 @@ on:
 
 env:
   SOURCE_DIRECTORY: ${{ github.workspace }}
-  SOLUTION_FILE: "OLT.Extensions.Configuration.RESTApi.sln"
+  SOLUTION_FILE: "OLT.Utility.Libraries.sln"
 
 jobs:
   build:
