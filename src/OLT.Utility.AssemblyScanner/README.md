@@ -1,3 +1,5 @@
+<img src="https://user-images.githubusercontent.com/1365728/127748628-47575d74-a2fb-4539-a31e-74d8b435fc21.png" width="30%" >
+
 # .NET Utility Library to scan for referenced assemblies 
 
 <code>OltAssemblyScanBuilder</code> is a flexible utility for filtering and loading .NET assemblies dynamically. Using a builder pattern, it allows you to include or exclude assemblies based on specified criteria, making it ideal for scenarios where you need to manage assembly loading at runtime.
