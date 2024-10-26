@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Utility.AssemblyScanner
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{078AEE3C-C4A0-4505-8634-FE3A1FE2C369}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Build", ".Build", "{DB54F095-320A-41D2-820F-E913D9000F6B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{DB54F095-320A-41D2-820F-E913D9000F6B}"
 	ProjectSection(SolutionItems) = preProject
 		src\Directory.Build.props = src\Directory.Build.props
 	EndProjectSection
@@ -21,6 +21,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2DEC25C6-4E2A-4761-A1F1-B97F97243A45}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Utility.AssemblyScanner.Tests", "tests\OLT.Utility.AssemblyScanner.Tests\OLT.Utility.AssemblyScanner.Tests.csproj", "{FD3458BE-A204-4E7F-AFF5-F53CEE877145}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution", ".solution", "{B0F23B17-CAE3-4DF8-889A-5FCC85C3FC78}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

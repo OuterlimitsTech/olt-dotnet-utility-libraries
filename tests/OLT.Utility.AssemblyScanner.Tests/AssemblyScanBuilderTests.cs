@@ -6,17 +6,34 @@ namespace OLT.Utility.AssemblyScanner.Tests
     public class AssemblyScanBuilderTests
     {
         [Fact]
-        public void ShouldCreate()
+        public void NoMok_ShouldOnlyContainOltAssemblies()
         {
             var assemblies = new OltAssemblyScanBuilder()
-                .IncludeFilter("OLT.", "MyApp.")
+                .IncludeFilter("OLT.")
                 .ExcludeFilter("System.")
                 .ExcludeFilter("Microsoft.")
+                .DeepScan()
                 .LoadAssemblies()
                 .Build();
 
             Assert.NotEmpty(assemblies);
-        }
+
+
+            assemblies = new OltAssemblyScanBuilder()
+                .IncludeFilter("OLT.")
+                .DeepScan()
+                .LoadAssemblies()
+                .Build();
+
+            Assert.NotEmpty(assemblies);
+
+            assemblies = new OltAssemblyScanBuilder()
+                .DeepScan()
+                .LoadAssemblies()
+                .Build();
+
+            Assert.Empty(assemblies);
+        }      
 
         [Fact]
         public void IncludeFilter_ShouldOnlyIncludeMatchingAssemblies()

@@ -11,10 +11,10 @@ namespace OLT.Utility
         protected List<string> includeFilters = new List<string>();
         protected List<string> excludeFilters = new List<string>();
         protected List<string> _ignoredNames = new List<string>();
-        protected bool loadAssemblies;
-        protected List<Assembly> scanAssemblies = new List<Assembly>();
-
-
+        protected bool _loadAssemblies;
+        protected bool _deepScan;
+        protected List<Assembly> _scanAssemblies = new List<Assembly>();
+        
         /// <summary>
         /// Add to include filters IncludeFilter("OLT.", "MyApp.")
         /// </summary>
@@ -77,7 +77,7 @@ namespace OLT.Utility
         /// <returns></returns>
         public virtual OltAssemblyScanBuilder IncludeAssembly(params Assembly[] assemblies)
         {
-            scanAssemblies.AddRange(assemblies);
+            _scanAssemblies.AddRange(assemblies);
             return this;
         }
 
@@ -88,17 +88,30 @@ namespace OLT.Utility
         /// <returns></returns>
         public virtual OltAssemblyScanBuilder IncludeAssemblies(List<Assembly> assemblies)
         {
-            scanAssemblies.AddRange(assemblies);
+            _scanAssemblies.AddRange(assemblies);
             return this;
         }
 
         /// <summary>
-        /// Method to enable loading of assemblies
+        /// Deep Scan will get the dependent assemblies
+        /// </summary>
+        /// <remarks>
+        /// NOTE: This does require loading dependent assemblies
+        /// </remarks>
+        /// <returns></returns>
+        public OltAssemblyScanBuilder DeepScan()
+        {
+            _deepScan = true;
+            return this;
+        }
+
+        /// <summary>
+        /// Load assemblies into <seealso cref="AppDomain.CurrentDomain"/>
         /// </summary>
         /// <returns></returns>
         public OltAssemblyScanBuilder LoadAssemblies()
         {
-            loadAssemblies = true;
+            _loadAssemblies = true;
             return this;
         }
 
@@ -109,23 +122,45 @@ namespace OLT.Utility
         public IEnumerable<Assembly> Build()
         {
             // Get all currently loaded assemblies in the application domain
-            scanAssemblies.AddRange(AppDomain.CurrentDomain.GetAssemblies());
+            _scanAssemblies.AddRange(AppDomain.CurrentDomain.GetAssemblies());
+            _scanAssemblies.Add(Assembly.GetCallingAssembly());
+            Assembly? entryAssembly = Assembly.GetEntryAssembly();
+
+            if (entryAssembly is not null && !_scanAssemblies.Any(asm => asm.Equals(entryAssembly)))
+            {
+                _scanAssemblies.Add(entryAssembly);
+            }
+
 
             // Apply include filters
-            var filteredAssemblies = scanAssemblies
-                .Where(a => includeFilters.Any(filter => a.GetName().Name.StartsWith(filter)))
+            var filteredAssemblies = _scanAssemblies
+                .Where(a => includeFilters.Any(filter => a.GetName().FullName.StartsWith(filter)))
                 .ToList();
+                
+
+            if (_deepScan)
+            {
+                foreach (var asm in filteredAssemblies)
+                {
+                     filteredAssemblies.AddRange(LoadReferencedAssemblies(asm));
+                }
+
+                filteredAssemblies = filteredAssemblies
+                    .Where(a => includeFilters.Any(filter => a.GetName().FullName.StartsWith(filter)))
+                    .ToList();
+            }
+
 
             // Apply exclude filters
             if (excludeFilters.Any())
             {
                 filteredAssemblies = filteredAssemblies
-                    .Where(a => !excludeFilters.Any(filter => a.GetName().Name.StartsWith(filter)))
+                    .Where(a => !excludeFilters.Any(filter => a.GetName().FullName.StartsWith(filter)))
                     .ToList();
             }
 
-            // Optionally load assemblies
-            if (loadAssemblies)
+                        
+            if (_loadAssemblies)
             {
                 foreach (var assemblyName in filteredAssemblies.Select(a => a.GetName()))
                 {
@@ -133,68 +168,56 @@ namespace OLT.Utility
                     {
                         Assembly.Load(assemblyName);
                     }
-                    catch (Exception ex)
-                    {
-                        // Handle any exceptions, such as file not found or bad format
-                        Console.WriteLine($"Error loading assembly: {assemblyName.Name} - {ex.Message}");
-                    }
+                    catch (FileNotFoundException) { }
                 }
             }
 
-            return filteredAssemblies;
+#if NET6_0_OR_GREATER
+            return filteredAssemblies.DistinctBy(a => a.GetName().FullName).ToList();
+#else
+            return filteredAssemblies.DistinctBy(a => a.GetName().FullName).ToList(); 
+#endif
+
+
         }
 
-        private Assembly[] LoadReferencedAssemblies(Assembly sourceAssembly, string filter)
+        private IEnumerable<Assembly> LoadReferencedAssemblies(Assembly sourceAssembly)
         {
-            if (sourceAssembly is null)
-                return [];
+            if (sourceAssembly is null) return Array.Empty<Assembly>();
 
             List<Assembly> loaded = [];
 
             foreach (AssemblyName asmName in sourceAssembly.GetReferencedAssemblies())
             {
-                loaded.AddRange(LoadAssembly(asmName, filter));
+                loaded.AddRange(LoadAssembly(asmName));
             }
 
-            return [.. loaded];
+            return loaded;
         }
 
 
-        private Assembly[] LoadAssembly(AssemblyName asmName, string filter)
+        private IEnumerable<Assembly> LoadAssembly(AssemblyName asmName)
         {
             if (asmName is null || asmName.FullName.IsNullOrWhiteSpace() || IsIgnored(asmName) || IsAlreadyLoaded(asmName)) return Array.Empty<Assembly>();
 
-
             List<Assembly> loaded = [];
-
-
-#if NET6_0_OR_GREATER
-            if (filter.IsNullOrWhiteSpace() || asmName.FullName.Contains(filter, StringComparison.OrdinalIgnoreCase))
-#else
-            if (filter.IsNullOrWhiteSpace() || asmName.FullName.ToLower().Contains(filter.ToLower()))
-#endif
+            var addAssembly = includeFilters.Count > 0 ? asmName.FullName.StartsWithAny(true, includeFilters.ToArray()) : true;
+            if (addAssembly)
             {
                 try
                 {
-                    var assembly = Assembly.Load(asmName);
-
+                    var assembly = Assembly.Load(asmName);  //Load Assembly into AppDomain
                     loaded.Add(assembly);
-
-                    var childrenLoaded = LoadReferencedAssemblies(assembly, filter);
-
-                    if (childrenLoaded.Length > 0)
-                    {
-                        loaded.AddRange(childrenLoaded);
-                    }
-                        
+                    var children = LoadReferencedAssemblies(assembly);
+                    loaded.AddRange(children);
                 }
                 catch (FileNotFoundException) { }
             }
 
-            return [.. loaded];
+            return loaded;
         }
 
-        internal bool IsIgnored(AssemblyName asmName)
+        private bool IsIgnored(AssemblyName asmName)
         {
             return asmName is null
                 || asmName.FullName.IsNullOrWhiteSpace()
@@ -205,14 +228,15 @@ namespace OLT.Utility
         private bool IsAlreadyLoaded(AssemblyName asmName)
         {
             var alreadyLoaded = AppDomain.CurrentDomain
-                                         .GetAssemblies()
-                                         .SelectDistinct(asm => asm.FullName ?? string.Empty)
-                                         .ToList();
+                             .GetAssemblies()
+                             .SelectDistinct(asm => asm.FullName ?? string.Empty)
+                             .ToList();
 
-            // The DependencyContext doesn't provide the fully qualified assembly names,
-            // so we have to check for StartsWith as well.
-
+#if NET6_0_OR_GREATER
             return alreadyLoaded.Contains(asmName.FullName, StringComparer.OrdinalIgnoreCase) || alreadyLoaded.Any(asm => asm.StartsWith(asmName.FullName, StringComparison.OrdinalIgnoreCase));
+#else
+            return alreadyLoaded.Contains(asmName.FullName) || alreadyLoaded.Any(asm => asm.StartsWith(asmName.FullName));
+#endif
         }
 
 
