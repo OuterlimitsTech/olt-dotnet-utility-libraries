@@ -35,7 +35,7 @@ class Program
     static void Main()
     {
         var assemblies = new OltAssemblyScanBuilder()
-            .IncludeFilters("OLT.", "MyApp.")
+            .IncludeFilter("OLT.", "MyApp.")
             .LoadAssemblies()
             .Build();
         
@@ -57,10 +57,20 @@ class Program
 {
     static void Main()
     {
+        var scanAssemblies = new List<Assembly>()
+        {
+            typeof(MyDatabaseContext).Assembly,
+            typeof(IAnotherInterface).Assembly
+        };
+
         var assemblies = new OltAssemblyScanBuilder()
-            .IncludeFilters("OLT.", "MyApp.")
+            .IncludeFilter("OLT.", "MyApp.")
             .ExcludeFilter("System.")
             .ExcludeFilter("Microsoft.")
+            .IncludeAssemblies(scanAssemblies)
+            .IncludeAssembly(typeof(Program).Assembly)
+            .ExcludeMicrosoft()
+            .ExcludeAutomapper()
             .DeepScan()
             .LoadAssemblies()
             .Build();
