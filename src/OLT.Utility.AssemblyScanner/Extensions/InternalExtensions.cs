@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
-namespace OLT.Utility;
+namespace OLT.Utility.AssemblyScanner;
 
 internal static class InternalExtensions
 {

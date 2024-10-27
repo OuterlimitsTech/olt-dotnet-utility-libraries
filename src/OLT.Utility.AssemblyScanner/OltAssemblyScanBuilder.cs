@@ -1,66 +1,56 @@
-﻿using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 
-namespace OLT.Utility
+namespace OLT.Utility.AssemblyScanner
 {
     /// <summary>
-    /// Load Referenced Assembly Scanner
+    /// Scans <see cref="AppDomain.CurrentDomain"/> and <see cref="IncludeAssembly(Assembly[])"/> Assemblies and returns a list of referenced <see cref="Assembly"/>
     /// </summary>
+    /// <remarks>
+    /// <see cref="IEnumerable{T}"/> Assembiles that can be passed into
+    /// <list type="bullet">
+    /// <item><a href="https://github.com/khellang/Scrutor/">Scutor</a></item>
+    /// <item><a href="https://automapper.org/">Automapper</a></item>
+    /// </list>
+    /// </remarks>
     public class OltAssemblyScanBuilder
     {
-        protected List<string> includeFilters = new List<string>();
-        protected List<string> excludeFilters = new List<string>();
-        protected List<string> _ignoredNames = new List<string>();
-        protected bool _loadAssemblies;
-        protected bool _deepScan;
-        protected List<Assembly> _scanAssemblies = new List<Assembly>();
-        
+        private List<string> _includeFilters = new List<string>();
+        private List<string> _excludeFilters = new List<string>();
+        private List<string> _ignoredNames = new List<string>();
+        private bool _loadAssemblies;
+        private bool _deepScan;
+        private List<Assembly> _scanAssemblies = new List<Assembly>();
+
         /// <summary>
         /// Add to include filters IncludeFilter("OLT.", "MyApp.")
         /// </summary>
+        /// <remarks>
+        /// Includes <see cref="AssemblyName"/> that start with the <paramref name="filters"/>
+        /// </remarks>
         /// <param name="filters"></param>
         /// <returns></returns>
         public virtual OltAssemblyScanBuilder IncludeFilter(params string[] filters)
         {
-            includeFilters.AddRange(filters);
+            _includeFilters.AddRange(filters);
             return this;
         }
 
         /// <summary>
         /// Add to exclude filters ExcludeFilter("Microsoft.", "mscorlib", "netstandard", "Swashbuckle", "System.", "Windows.")
         /// </summary>
+        /// <remarks>
+        /// Excludes <see cref="AssemblyName"/> that start with the <paramref name="filters"/>
+        /// </remarks>
         /// <param name="filters"></param>
         /// <returns></returns>
         public virtual OltAssemblyScanBuilder ExcludeFilter(params string[] filters)
         {
-            excludeFilters.AddRange(filters);
+            _excludeFilters.AddRange(filters);
             return this;
         }
 
         /// <summary>
-        /// Adds "Microsoft.", "mscorlib", "netstandard", "Swashbuckle", "System.", "Windows."
-        /// </summary>
-        /// <param name="filters"></param>
-        /// <returns></returns>
-        public virtual OltAssemblyScanBuilder ExcludeMicrosoft()
-        {
-            ExcludeFilter("Microsoft.", "mscorlib", "netstandard", "Swashbuckle", "System.", "Windows.");
-            return this;
-        }
-
-        /// <summary>
-        /// Adds "Automapper"
-        /// </summary>
-        /// <param name="filters"></param>
-        /// <returns></returns>
-        public virtual OltAssemblyScanBuilder ExcludeAutomapper()
-        {
-            ExcludeFilter("Automapper");
-            return this;
-        }
-
-        /// <summary>
-        /// Ignore any assembly containing the name
+        /// Ignore any assembly containing the <see cref="string"/>
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
@@ -86,7 +76,7 @@ namespace OLT.Utility
         /// </summary>
         /// <param name="assemblies"></param>
         /// <returns></returns>
-        public virtual OltAssemblyScanBuilder IncludeAssemblies(List<Assembly> assemblies)
+        public virtual OltAssemblyScanBuilder IncludeAssembly(IEnumerable<Assembly> assemblies)
         {
             _scanAssemblies.AddRange(assemblies);
             return this;
@@ -116,50 +106,56 @@ namespace OLT.Utility
         }
 
         /// <summary>
-        /// Build method to return filtered assemblies based on the current configuration
+        /// Build method to return filtered assemblies based on the current <see cref="includeFilters"/> (and <see cref="excludeFilters"/> if provided)
         /// </summary>
         /// <returns></returns>
         public IEnumerable<Assembly> Build()
         {
-            // Get all currently loaded assemblies in the application domain
-            _scanAssemblies.AddRange(AppDomain.CurrentDomain.GetAssemblies());
-            _scanAssemblies.Add(Assembly.GetCallingAssembly());
-            Assembly? entryAssembly = Assembly.GetEntryAssembly();
+            var allAssemblies = new HashSet<Assembly>(new OltAssemblyFullNameComparer());
+            var toProcess = new Queue<Assembly>(_scanAssemblies);
 
-            if (entryAssembly is not null && !_scanAssemblies.Any(asm => asm.Equals(entryAssembly)))
+            // Add the calling assembly if it's not part of the assemblies to scan and it's not already added
+            var callingAssembly = Assembly.GetCallingAssembly();
+            if (!_scanAssemblies.Any(a => a.FullName == callingAssembly.FullName))
             {
-                _scanAssemblies.Add(entryAssembly);
+                toProcess.Enqueue(callingAssembly);
             }
 
+            //Include assemblies already loaded in the AppDomain that match the filters
+            foreach (var loadedAssembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                toProcess.Enqueue(loadedAssembly);
+            }
+
+            while (toProcess.Count > 0)
+            {
+                var assembly = toProcess.Dequeue();
+                if (allAssemblies.Add(assembly))
+                {
+                    ProcessReferencedAssemblies(assembly, toProcess.Enqueue);
+                }
+            }
 
             // Apply include filters
-            var filteredAssemblies = _scanAssemblies
-                .Where(a => includeFilters.Any(filter => a.GetName().FullName.StartsWith(filter)))
+            var filteredAssemblies = allAssemblies
+                .Where(a => _includeFilters.Any(filter => a.GetName().FullName.StartsWith(filter)))
                 .ToList();
-                
-
-            if (_deepScan)
-            {
-                foreach (var asm in filteredAssemblies)
-                {
-                     filteredAssemblies.AddRange(LoadReferencedAssemblies(asm));
-                }
-
-                filteredAssemblies = filteredAssemblies
-                    .Where(a => includeFilters.Any(filter => a.GetName().FullName.StartsWith(filter)))
-                    .ToList();
-            }
-
 
             // Apply exclude filters
-            if (excludeFilters.Any())
+            if (_excludeFilters.Any())
             {
                 filteredAssemblies = filteredAssemblies
-                    .Where(a => !excludeFilters.Any(filter => a.GetName().FullName.StartsWith(filter)))
+                    .Where(a => !_excludeFilters.Any(filter => a.GetName().FullName.StartsWith(filter)))
                     .ToList();
             }
 
-                        
+            if (_ignoredNames.Any())
+            {
+                filteredAssemblies = filteredAssemblies
+                    .Where(a => !_ignoredNames.Any(filter => a.GetName().FullName.Contains(filter)))
+                    .ToList();
+            }
+
             if (_loadAssemblies)
             {
                 foreach (var assemblyName in filteredAssemblies.Select(a => a.GetName()))
@@ -172,73 +168,50 @@ namespace OLT.Utility
                 }
             }
 
-#if NET6_0_OR_GREATER
             return filteredAssemblies.DistinctBy(a => a.GetName().FullName).ToList();
-#else
-            return filteredAssemblies.DistinctBy(a => a.GetName().FullName).ToList(); 
-#endif
-
-
         }
 
-        private IEnumerable<Assembly> LoadReferencedAssemblies(Assembly sourceAssembly)
+        private void ProcessReferencedAssemblies(Assembly assembly, Action<Assembly> addToQueue)
         {
-            if (sourceAssembly is null) return Array.Empty<Assembly>();
-
-            List<Assembly> loaded = [];
-
-            foreach (AssemblyName asmName in sourceAssembly.GetReferencedAssemblies())
+            if (!_deepScan)
             {
-                loaded.AddRange(LoadAssembly(asmName));
+                return;
             }
 
-            return loaded;
-        }
+            var referencedAssemblies = assembly.GetReferencedAssemblies()
+                    .Where(a => _includeFilters.Any(filter => a.FullName.StartsWith(filter)))
+                    .ToList();
 
+            // Apply exclude filters
+            if (_excludeFilters.Any())
+            {
+                referencedAssemblies = referencedAssemblies
+                    .Where(a => !_excludeFilters.Any(filter => a.FullName.StartsWith(filter)))
+                    .ToList();
+            }
 
-        private IEnumerable<Assembly> LoadAssembly(AssemblyName asmName)
-        {
-            if (asmName is null || asmName.FullName.IsNullOrWhiteSpace() || IsIgnored(asmName) || IsAlreadyLoaded(asmName)) return Array.Empty<Assembly>();
+            if (_ignoredNames.Any())
+            {
+                referencedAssemblies = referencedAssemblies
+                    .Where(a => !_ignoredNames.Any(filter => a.FullName.Contains(filter)))
+                    .ToList();
+            }
 
-            List<Assembly> loaded = [];
-            var addAssembly = includeFilters.Count > 0 ? asmName.FullName.StartsWithAny(true, includeFilters.ToArray()) : true;
-            if (addAssembly)
+            // Load and queue referenced assemblies
+            foreach (var reference in referencedAssemblies)
             {
                 try
                 {
-                    var assembly = Assembly.Load(asmName);  //Load Assembly into AppDomain
-                    loaded.Add(assembly);
-                    var children = LoadReferencedAssemblies(assembly);
-                    loaded.AddRange(children);
+                    var loadedAssembly = Assembly.Load(reference);
+                    addToQueue(loadedAssembly);
                 }
-                catch (FileNotFoundException) { }
+                catch (Exception)
+                {
+
+                }
             }
 
-            return loaded;
         }
-
-        private bool IsIgnored(AssemblyName asmName)
-        {
-            return asmName is null
-                || asmName.FullName.IsNullOrWhiteSpace()
-                || asmName.FullName.StartsWithAny(true, includeFilters.ToArray())
-                || asmName.FullName.EqualsAny(true, _ignoredNames.ToArray());
-        }
-
-        private bool IsAlreadyLoaded(AssemblyName asmName)
-        {
-            var alreadyLoaded = AppDomain.CurrentDomain
-                             .GetAssemblies()
-                             .SelectDistinct(asm => asm.FullName ?? string.Empty)
-                             .ToList();
-
-#if NET6_0_OR_GREATER
-            return alreadyLoaded.Contains(asmName.FullName, StringComparer.OrdinalIgnoreCase) || alreadyLoaded.Any(asm => asm.StartsWith(asmName.FullName, StringComparison.OrdinalIgnoreCase));
-#else
-            return alreadyLoaded.Contains(asmName.FullName) || alreadyLoaded.Any(asm => asm.StartsWith(asmName.FullName));
-#endif
-        }
-
 
     }
 }
