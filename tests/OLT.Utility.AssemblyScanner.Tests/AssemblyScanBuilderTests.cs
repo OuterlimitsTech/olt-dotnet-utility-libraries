@@ -11,9 +11,7 @@ namespace OLT.Utility.AssemblyScanner.Tests
                 .Build();
 
             Assert.Empty(result);
-        }
-
-      
+        }     
      
     }
 }
