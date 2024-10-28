@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".workflow", ".workflow", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2DEC25C6-4E2A-4761-A1F1-B97F97243A45}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Utility.AssemblyScanner.Tests", "tests\OLT.Utility.AssemblyScanner.Tests\OLT.Utility.AssemblyScanner.Tests.csproj", "{FD3458BE-A204-4E7F-AFF5-F53CEE877145}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Utility.AssemblyScanner.Tests", "tests\OLT.Utility.AssemblyScanner\OLT.Utility.AssemblyScanner.Tests\OLT.Utility.AssemblyScanner.Tests.csproj", "{FD3458BE-A204-4E7F-AFF5-F53CEE877145}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution", ".solution", "{B0F23B17-CAE3-4DF8-889A-5FCC85C3FC78}"
 	ProjectSection(SolutionItems) = preProject
@@ -29,31 +29,38 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution", ".solution", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestAssemblies", "TestAssemblies", "{3607EF6C-F6E7-41EC-A89B-1E1AB7345766}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.AssemblyOne", "tests\TestAssemblies\Test.AssemblyOne\Test.AssemblyOne.csproj", "{1B372103-9BD1-49AB-A4B6-C529915F0F32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.AssemblyOne", "tests\OLT.Utility.AssemblyScanner\TestAssemblies\Test.AssemblyOne\Test.AssemblyOne.csproj", "{1B372103-9BD1-49AB-A4B6-C529915F0F32}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.AssemblyTwo", "tests\TestAssemblies\Test.AssemblyTwo\Test.AssemblyTwo.csproj", "{DB3BF05C-D446-44D4-A4B5-2E27B62CD9AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.AssemblyTwo", "tests\OLT.Utility.AssemblyScanner\TestAssemblies\Test.AssemblyTwo\Test.AssemblyTwo.csproj", "{DB3BF05C-D446-44D4-A4B5-2E27B62CD9AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.ExcludeAssembly", "tests\TestAssemblies\Test.ExcludeAssembly\Test.ExcludeAssembly.csproj", "{CC2CBA52-3773-465F-90B9-E42B760B29D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.ExcludeAssembly", "tests\OLT.Utility.AssemblyScanner\TestAssemblies\Test.ExcludeAssembly\Test.ExcludeAssembly.csproj", "{CC2CBA52-3773-465F-90B9-E42B760B29D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.IgnoreNameAssembly", "tests\TestAssemblies\Test.IgnoreNameAssembly\Test.IgnoreNameAssembly.csproj", "{59959E5B-701C-420F-A61C-7947BBD82E78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.IgnoreNameAssembly", "tests\OLT.Utility.AssemblyScanner\TestAssemblies\Test.IgnoreNameAssembly\Test.IgnoreNameAssembly.csproj", "{59959E5B-701C-420F-A61C-7947BBD82E78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Other.Assembly", "tests\TestAssemblies\Other.Assembly\Other.Assembly.csproj", "{5A9C8A76-81C0-4A7B-AE00-9C834062055D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Other.Assembly", "tests\OLT.Utility.AssemblyScanner\TestAssemblies\Other.Assembly\Other.Assembly.csproj", "{5A9C8A76-81C0-4A7B-AE00-9C834062055D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Utility.AssemblyScanner.Tests1", "tests\OLT.Utility.AssemblyScanner.Tests1\OLT.Utility.AssemblyScanner.Tests1.csproj", "{3F210C1E-D37E-4749-8F64-2772BB8A2438}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Utility.AssemblyScanner.Tests1", "tests\OLT.Utility.AssemblyScanner\OLT.Utility.AssemblyScanner.Tests1\OLT.Utility.AssemblyScanner.Tests1.csproj", "{3F210C1E-D37E-4749-8F64-2772BB8A2438}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Utility.AssemblyScanner.Tests2", "tests\OLT.Utility.AssemblyScanner.Tests2\OLT.Utility.AssemblyScanner.Tests2.csproj", "{BA74926E-61A3-4EBF-96C0-F8B98CE66963}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Utility.AssemblyScanner.Tests2", "tests\OLT.Utility.AssemblyScanner\OLT.Utility.AssemblyScanner.Tests2\OLT.Utility.AssemblyScanner.Tests2.csproj", "{BA74926E-61A3-4EBF-96C0-F8B98CE66963}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Utility.AssemblyScanner.Tests3", "tests\OLT.Utility.AssemblyScanner.Tests3\OLT.Utility.AssemblyScanner.Tests3.csproj", "{A2243061-7FE9-42E2-9786-6DA7E4EC76A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Utility.AssemblyScanner.Tests3", "tests\OLT.Utility.AssemblyScanner\OLT.Utility.AssemblyScanner.Tests3\OLT.Utility.AssemblyScanner.Tests3.csproj", "{A2243061-7FE9-42E2-9786-6DA7E4EC76A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Utility.AssemblyScanner.Tests4", "tests\OLT.Utility.AssemblyScanner.Tests4\OLT.Utility.AssemblyScanner.Tests4.csproj", "{F790E2AE-3F2C-4FE1-A11E-54AA7651B886}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Utility.AssemblyScanner.Tests4", "tests\OLT.Utility.AssemblyScanner\OLT.Utility.AssemblyScanner.Tests4\OLT.Utility.AssemblyScanner.Tests4.csproj", "{F790E2AE-3F2C-4FE1-A11E-54AA7651B886}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Utility.AssemblyScanner.Tests5", "tests\OLT.Utility.AssemblyScanner.Tests5\OLT.Utility.AssemblyScanner.Tests5.csproj", "{229B8C6A-815A-415E-8CFF-22F6478BAD1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Utility.AssemblyScanner.Tests5", "tests\OLT.Utility.AssemblyScanner\OLT.Utility.AssemblyScanner.Tests5\OLT.Utility.AssemblyScanner.Tests5.csproj", "{229B8C6A-815A-415E-8CFF-22F6478BAD1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Utility.AssemblyScanner.Tests6", "tests\OLT.Utility.AssemblyScanner.Tests6\OLT.Utility.AssemblyScanner.Tests6.csproj", "{91DCA2DE-064A-4266-B8D7-BE33EBEEA235}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Utility.AssemblyScanner.Tests6", "tests\OLT.Utility.AssemblyScanner\OLT.Utility.AssemblyScanner.Tests6\OLT.Utility.AssemblyScanner.Tests6.csproj", "{91DCA2DE-064A-4266-B8D7-BE33EBEEA235}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Utility.AssemblyScanner.Tests7", "tests\OLT.Utility.AssemblyScanner.Tests7\OLT.Utility.AssemblyScanner.Tests7.csproj", "{6342E63A-599F-4FFC-AD06-A3267B55640B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Utility.AssemblyScanner.Tests7", "tests\OLT.Utility.AssemblyScanner\OLT.Utility.AssemblyScanner.Tests7\OLT.Utility.AssemblyScanner.Tests7.csproj", "{6342E63A-599F-4FFC-AD06-A3267B55640B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Utility.AssemblyScanner.Tests8", "tests\OLT.Utility.AssemblyScanner.Tests8\OLT.Utility.AssemblyScanner.Tests8.csproj", "{BA9FC0C4-5A43-4D89-A073-5E3C756152A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Utility.AssemblyScanner.Tests8", "tests\OLT.Utility.AssemblyScanner\OLT.Utility.AssemblyScanner.Tests8\OLT.Utility.AssemblyScanner.Tests8.csproj", "{BA9FC0C4-5A43-4D89-A073-5E3C756152A8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OLT.Utility.AssemblyScanner", "OLT.Utility.AssemblyScanner", "{83F11B22-1F6B-4179-A0FA-DF13ED5A1CE7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{22697ECA-2DCB-4F89-B747-DA681B301CB5}"
+	ProjectSection(SolutionItems) = preProject
+		tests\Directory.Build.props = tests\Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -128,21 +135,23 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{63FC7A85-8FC7-4470-90DE-0F3EC101A2AC} = {078AEE3C-C4A0-4505-8634-FE3A1FE2C369}
 		{DB54F095-320A-41D2-820F-E913D9000F6B} = {078AEE3C-C4A0-4505-8634-FE3A1FE2C369}
-		{FD3458BE-A204-4E7F-AFF5-F53CEE877145} = {2DEC25C6-4E2A-4761-A1F1-B97F97243A45}
-		{3607EF6C-F6E7-41EC-A89B-1E1AB7345766} = {2DEC25C6-4E2A-4761-A1F1-B97F97243A45}
+		{FD3458BE-A204-4E7F-AFF5-F53CEE877145} = {83F11B22-1F6B-4179-A0FA-DF13ED5A1CE7}
+		{3607EF6C-F6E7-41EC-A89B-1E1AB7345766} = {83F11B22-1F6B-4179-A0FA-DF13ED5A1CE7}
 		{1B372103-9BD1-49AB-A4B6-C529915F0F32} = {3607EF6C-F6E7-41EC-A89B-1E1AB7345766}
 		{DB3BF05C-D446-44D4-A4B5-2E27B62CD9AD} = {3607EF6C-F6E7-41EC-A89B-1E1AB7345766}
 		{CC2CBA52-3773-465F-90B9-E42B760B29D8} = {3607EF6C-F6E7-41EC-A89B-1E1AB7345766}
 		{59959E5B-701C-420F-A61C-7947BBD82E78} = {3607EF6C-F6E7-41EC-A89B-1E1AB7345766}
 		{5A9C8A76-81C0-4A7B-AE00-9C834062055D} = {3607EF6C-F6E7-41EC-A89B-1E1AB7345766}
-		{3F210C1E-D37E-4749-8F64-2772BB8A2438} = {2DEC25C6-4E2A-4761-A1F1-B97F97243A45}
-		{BA74926E-61A3-4EBF-96C0-F8B98CE66963} = {2DEC25C6-4E2A-4761-A1F1-B97F97243A45}
-		{A2243061-7FE9-42E2-9786-6DA7E4EC76A5} = {2DEC25C6-4E2A-4761-A1F1-B97F97243A45}
-		{F790E2AE-3F2C-4FE1-A11E-54AA7651B886} = {2DEC25C6-4E2A-4761-A1F1-B97F97243A45}
-		{229B8C6A-815A-415E-8CFF-22F6478BAD1F} = {2DEC25C6-4E2A-4761-A1F1-B97F97243A45}
-		{91DCA2DE-064A-4266-B8D7-BE33EBEEA235} = {2DEC25C6-4E2A-4761-A1F1-B97F97243A45}
-		{6342E63A-599F-4FFC-AD06-A3267B55640B} = {2DEC25C6-4E2A-4761-A1F1-B97F97243A45}
-		{BA9FC0C4-5A43-4D89-A073-5E3C756152A8} = {2DEC25C6-4E2A-4761-A1F1-B97F97243A45}
+		{3F210C1E-D37E-4749-8F64-2772BB8A2438} = {83F11B22-1F6B-4179-A0FA-DF13ED5A1CE7}
+		{BA74926E-61A3-4EBF-96C0-F8B98CE66963} = {83F11B22-1F6B-4179-A0FA-DF13ED5A1CE7}
+		{A2243061-7FE9-42E2-9786-6DA7E4EC76A5} = {83F11B22-1F6B-4179-A0FA-DF13ED5A1CE7}
+		{F790E2AE-3F2C-4FE1-A11E-54AA7651B886} = {83F11B22-1F6B-4179-A0FA-DF13ED5A1CE7}
+		{229B8C6A-815A-415E-8CFF-22F6478BAD1F} = {83F11B22-1F6B-4179-A0FA-DF13ED5A1CE7}
+		{91DCA2DE-064A-4266-B8D7-BE33EBEEA235} = {83F11B22-1F6B-4179-A0FA-DF13ED5A1CE7}
+		{6342E63A-599F-4FFC-AD06-A3267B55640B} = {83F11B22-1F6B-4179-A0FA-DF13ED5A1CE7}
+		{BA9FC0C4-5A43-4D89-A073-5E3C756152A8} = {83F11B22-1F6B-4179-A0FA-DF13ED5A1CE7}
+		{83F11B22-1F6B-4179-A0FA-DF13ED5A1CE7} = {2DEC25C6-4E2A-4761-A1F1-B97F97243A45}
+		{22697ECA-2DCB-4F89-B747-DA681B301CB5} = {2DEC25C6-4E2A-4761-A1F1-B97F97243A45}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9C5D6EF3-D23E-4565-AAA4-A0E8540F1088}
