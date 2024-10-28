@@ -1,14 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
-  </PropertyGroup>
-
+	<PropertyGroup>
+		<IsTestProject>true</IsTestProject>
+	</PropertyGroup>
+	
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2">
       <PrivateAssets>all</PrivateAssets>
@@ -23,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\OLT.Utility.AssemblyScanner\OLT.Utility.AssemblyScanner.csproj" />
+    <ProjectReference Include="..\..\..\src\OLT.Utility.AssemblyScanner\OLT.Utility.AssemblyScanner.csproj" />
     <ProjectReference Include="..\TestAssemblies\Test.AssemblyOne\Test.AssemblyOne.csproj" />
     <ProjectReference Include="..\TestAssemblies\Test.AssemblyTwo\Test.AssemblyTwo.csproj" />
   </ItemGroup>
