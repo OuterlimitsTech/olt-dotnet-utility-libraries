@@ -1,6 +1,6 @@
 ﻿namespace Other.Assembly
 {
-    public class OtherClass : IOtherClass
+    public interface IOtherClass
     {
 
     }
