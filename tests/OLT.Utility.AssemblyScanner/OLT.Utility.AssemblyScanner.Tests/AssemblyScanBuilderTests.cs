@@ -6,6 +6,7 @@ namespace OLT.Utility.AssemblyScanner.Tests
         public void NoFilters_ShouldBeEmty()
         {
             var result = new OltAssemblyScanBuilder()
+                .IncludeFilter("Foobar")
                 .DeepScan()
                 .LoadAssemblies()
                 .Build();
