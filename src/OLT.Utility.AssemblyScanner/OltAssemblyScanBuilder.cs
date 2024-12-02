@@ -106,6 +106,36 @@ namespace OLT.Utility.AssemblyScanner
         }
 
         /// <summary>
+        /// Adds "Microsoft.", "mscorlib", "netstandard", "Swashbuckle", "System.", "Windows."
+        /// </summary>
+        /// <returns></returns>
+        public OltAssemblyScanBuilder ExcludeMicrosoft()
+        {
+            this.ExcludeFilter("Microsoft.", "mscorlib", "netstandard", "Swashbuckle", "System.", "Windows.");
+            return this;
+        }
+
+        /// <summary>
+        /// Adds "Automapper"
+        /// </summary>
+        /// <returns></returns>
+        public OltAssemblyScanBuilder ExcludeAutomapper()
+        {
+            this.ExcludeFilter("Automapper");
+            return this;
+        }
+
+        /// <summary>
+        /// Adds "Automapper"
+        /// </summary>
+        /// <returns></returns>
+        public OltAssemblyScanBuilder ExcludeNewtonsoft()
+        {
+            this.ExcludeFilter("Newtonsoft");
+            return this;
+        }
+
+        /// <summary>
         /// Build method to return filtered assemblies based on the current <see cref="includeFilters"/> (and <see cref="excludeFilters"/> if provided)
         /// </summary>
         /// <returns></returns>
