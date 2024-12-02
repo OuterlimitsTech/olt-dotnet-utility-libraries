@@ -136,10 +136,15 @@ namespace OLT.Utility.AssemblyScanner
                 }
             }
 
+            var filteredAssemblies = allAssemblies.ToList();
+
             // Apply include filters
-            var filteredAssemblies = allAssemblies
-                .Where(a => _includeFilters.Any(filter => a.GetName().FullName.StartsWith(filter)))
-                .ToList();
+            if (_includeFilters.Any())
+            {
+                filteredAssemblies = filteredAssemblies
+                    .Where(a => _includeFilters.Any(filter => a.GetName().FullName.StartsWith(filter)))
+                    .ToList();
+            }
 
             // Apply exclude filters
             if (_excludeFilters.Any())
