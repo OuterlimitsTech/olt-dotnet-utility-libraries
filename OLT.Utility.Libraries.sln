@@ -62,6 +62,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{22697E
 		tests\Directory.Build.props = tests\Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Utility.S3", "src\OLT.Utility.S3\OLT.Utility.S3.csproj", "{71BC642A-9B20-4E10-8214-6959908E5B64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,6 +130,10 @@ Global
 		{BA9FC0C4-5A43-4D89-A073-5E3C756152A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA9FC0C4-5A43-4D89-A073-5E3C756152A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA9FC0C4-5A43-4D89-A073-5E3C756152A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71BC642A-9B20-4E10-8214-6959908E5B64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71BC642A-9B20-4E10-8214-6959908E5B64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71BC642A-9B20-4E10-8214-6959908E5B64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71BC642A-9B20-4E10-8214-6959908E5B64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,6 +158,7 @@ Global
 		{BA9FC0C4-5A43-4D89-A073-5E3C756152A8} = {83F11B22-1F6B-4179-A0FA-DF13ED5A1CE7}
 		{83F11B22-1F6B-4179-A0FA-DF13ED5A1CE7} = {2DEC25C6-4E2A-4761-A1F1-B97F97243A45}
 		{22697ECA-2DCB-4F89-B747-DA681B301CB5} = {2DEC25C6-4E2A-4761-A1F1-B97F97243A45}
+		{71BC642A-9B20-4E10-8214-6959908E5B64} = {078AEE3C-C4A0-4505-8634-FE3A1FE2C369}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9C5D6EF3-D23E-4565-AAA4-A0E8540F1088}
