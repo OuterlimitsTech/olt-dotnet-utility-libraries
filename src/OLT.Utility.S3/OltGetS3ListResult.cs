@@ -18,7 +18,7 @@
         /// <summary>
         /// The list of S3 object responses.
         /// </summary>
-        public List<OltGetS3Result> Objects { get; } = new List<OltGetS3Result>();
+        public IReadOnlyList<OltS3Object> Objects { get; init; } = Array.Empty<OltS3Object>();
     }
 
 }

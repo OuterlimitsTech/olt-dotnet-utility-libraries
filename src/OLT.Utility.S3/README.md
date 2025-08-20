@@ -1,18 +1,11 @@
 <img src="https://user-images.githubusercontent.com/1365728/127748628-47575d74-a2fb-4539-a31e-74d8b435fc21.png" width="30%" >
 
-# .NET Utility Library to scan for referenced assemblies 
+# .NET Utility Library for S3
 
-<code>OltS3Extenstions</code> is a flexible utility for filtering and loading .NET assemblies dynamically. Using a builder pattern, it allows you to include or exclude assemblies based on specified criteria, making it ideal for scenarios where you need to manage assembly loading at runtime.
+<code>OltS3Extenstions</code> provides simple extenstions for common S3 tasks
 
 [![Nuget](https://img.shields.io/nuget/v/OLT.Utility.S3)](https://www.nuget.org/packages/OLT.Utility.S3)
 [![CI](https://github.com/OuterlimitsTech/olt-dotnet-utility-libraries/actions/workflows/build.yml/badge.svg)](https://github.com/OuterlimitsTech/olt-dotnet-utility-libraries/actions/workflows/build.yml) 
-
-
-### Features
-- Filter Assemblies: Include or exclude assemblies based on name patterns.
-- Dynamic Loading: Optionally load assemblies into the current AppDomain.
-- Chainable API: Utilizes a builder pattern for flexible configuration.
-- Distinct List: Ensures a distinct list of assemblies is returned after filtering
 
 
 ### Installation

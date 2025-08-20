@@ -93,9 +93,8 @@ namespace OLT.Utility.S3
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>A <see cref="OltGetS3ListResult"/> containing the list of objects.</returns>
         public static async Task<OltGetS3ListResult> GetAllAsync(this IAmazonS3 s3Client, string? bucketName, string? pathPrefix, CancellationToken cancellationToken = default)
-        {
-            var successResult = new OltGetS3ListResult { Success = true };
-
+        {            
+            var objects = new List<OltS3Object>();
             ArgumentNullException.ThrowIfNullOrEmpty(bucketName);
             ArgumentNullException.ThrowIfNullOrEmpty(pathPrefix);
 
@@ -123,9 +122,12 @@ namespace OLT.Utility.S3
                         try
                         {
                             var response = await GetAsync(s3Client, obj.BucketName, obj.Key, cancellationToken);
-                            if (response.S3Object?.ObjectKey != pathPrefix)
+                            if (response.Success && response.S3Object?.ObjectKey != pathPrefix)
                             {
-                                successResult.Objects.Add(response);
+                                if (response.S3Object != null)
+                                {
+                                    objects.Add(response.S3Object);
+                                }                                
                             }
                         }
                         catch
@@ -144,7 +146,11 @@ namespace OLT.Utility.S3
                 return new OltGetS3ListResult { Success = false };
             }
 
-            return successResult;
+            return new OltGetS3ListResult
+            {
+                Success = true,
+                Objects = objects.AsReadOnly()
+            };
         }
 
         /// <summary>
