@@ -43,17 +43,22 @@ namespace OLT.Utility.S3
         }
 
         /// <summary>
-        /// Retrieves an object from S3 by bucket name and storage ID.
+        /// Retrieves an object from S3 by bucket name and object key.
         /// </summary>
         /// <param name="s3Client">The Amazon S3 client.</param>
         /// <param name="bucketName">The name of the bucket.</param>
-        /// <param name="storageId">The key of the object to retrieve.</param>
+        /// <param name="objectKey">The key of the object to retrieve.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
-        /// <returns>A <see cref="OltGetS3Result"/> containing the result of the operation.</returns>
-        public static async Task<OltGetS3Result> GetAsync(this IAmazonS3 s3Client, string? bucketName, string? storageId, CancellationToken cancellationToken = default)
+        /// <returns>
+        /// An <see cref="OltGetS3Result"/> containing the result of the operation.
+        /// If the object is found, <see cref="OltGetS3Result.Success"/> is true and <see cref="OltGetS3Result.S3Object"/> contains the object.
+        /// If the object is not found, <see cref="OltGetS3Result.Success"/> is true and <see cref="OltGetS3Result.StatusCode"/> is set to NotFound.
+        /// If an error occurs, <see cref="OltGetS3Result.Success"/> is false and <see cref="OltGetS3Result.Exception"/> is set.
+        /// </returns>
+        public static async Task<OltGetS3Result> GetAsync(this IAmazonS3 s3Client, string? bucketName, string? objectKey, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(bucketName);
-            ArgumentNullException.ThrowIfNullOrEmpty(storageId);
+            ArgumentNullException.ThrowIfNullOrEmpty(objectKey);
 
             try
             {
@@ -63,7 +68,7 @@ namespace OLT.Utility.S3
                 var request = new GetObjectRequest
                 {
                     BucketName = bucketName,
-                    Key = storageId
+                    Key = objectKey
                 };
 
                 using var response = await s3Client.GetObjectAsync(request, cancellationToken);
@@ -81,6 +86,59 @@ namespace OLT.Utility.S3
             catch (Exception ex)
             {
                 return new OltGetS3Result { Success = false, Exception = ex };
+            }
+        }
+
+
+        /// <summary>
+        /// Retrieves an object from S3 as a stream by bucket name and object key.
+        /// </summary>
+        /// <param name="s3Client">The Amazon S3 client.</param>
+        /// <param name="bucketName">The name of the bucket.</param>
+        /// <param name="objectKey">The key of the object to retrieve.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>
+        /// An <see cref="OltGetS3StreamResult"/> containing the S3 object and a stream of its contents.
+        /// If the object is not found, <see cref="OltGetS3Result.Success"/> is true and <see cref="OltGetS3Result.StatusCode"/> is set to NotFound.
+        /// If an error occurs, <see cref="OltGetS3Result.Success"/> is false and <see cref="OltGetS3Result.Exception"/> is set.
+        /// </returns>
+        public static async Task<OltGetS3StreamResult> GetStreamAsync(this IAmazonS3 s3Client, string? bucketName, string? objectKey, CancellationToken cancellationToken = default)
+        {
+            ArgumentNullException.ThrowIfNullOrEmpty(bucketName);
+            ArgumentNullException.ThrowIfNullOrEmpty(objectKey);
+
+            try
+            {
+                await CreateBucketIfNotExistsAsync(s3Client, bucketName);
+
+                var request = new GetObjectRequest
+                {
+                    BucketName = bucketName,
+                    Key = objectKey
+                };
+
+                using var response = await s3Client.GetObjectAsync(request, cancellationToken);
+                using var responseStream = response?.ResponseStream;
+                MemoryStream? memoryStream = null;
+                if (responseStream != null)
+                {
+                    memoryStream = new MemoryStream();
+                    await responseStream.CopyToAsync(memoryStream, cancellationToken);
+                    memoryStream.Position = 0;
+                }
+                return new OltGetS3StreamResult(new OltS3Object(response), memoryStream) { Success = true };
+            }
+            catch (AmazonS3Exception ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return new OltGetS3StreamResult { Success = true, StatusCode = ex.StatusCode };
+            }
+            catch (AmazonS3Exception ex)
+            {
+                return new OltGetS3StreamResult { Success = false, StatusCode = ex.StatusCode, Exception = ex };
+            }
+            catch (Exception ex)
+            {
+                return new OltGetS3StreamResult { Success = false, Exception = ex };
             }
         }
 

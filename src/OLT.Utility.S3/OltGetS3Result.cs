@@ -51,5 +51,4 @@ namespace OLT.Utility.S3
         /// </summary>
         public Exception? Exception { get; init; }
     }
-
 }
