@@ -10,7 +10,7 @@ namespace OLT.Utility.S3
     public static class OltS3Extenstions
     {
         /// <summary>
-        /// Creates an S3 bucket if it does not exist. Only executes if the debugger is attached.
+        /// Creates an S3 bucket if it does not exist
         /// </summary>
         /// <param name="s3Client">The Amazon S3 client.</param>
         /// <param name="bucketName">The name of the bucket to create.</param>
