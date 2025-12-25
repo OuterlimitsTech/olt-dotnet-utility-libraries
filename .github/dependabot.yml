@@ -4,10 +4,6 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
-    ignore:
-      - dependency-name: "AWSSDK.S3"
-        versions: 
-          - 3.7.*
     labels:
       - "dependencies"
       - "github-actions"
@@ -16,6 +12,10 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "AWSSDK.S3"
+        versions: 
+          - 3.7.*      
     labels:
       - "dependencies"
       - "nuget"
