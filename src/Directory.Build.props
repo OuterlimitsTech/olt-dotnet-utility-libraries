@@ -5,7 +5,7 @@
     <Company>OuterLimits Technologies, Inc</Company>
     <Product>OLT Utility Libraries</Product>
     <Authors>Chris Straw</Authors>
-    <Copyright>Copyright © 2003-2024, OuterLimits Technologies, Inc Plainfield, IN</Copyright>
+    <Copyright>Copyright © 2003-2026, OuterLimits Technologies, Inc Plainfield, IN</Copyright>
     <PackageIcon>icon.png</PackageIcon>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugType>embedded</DebugType>
